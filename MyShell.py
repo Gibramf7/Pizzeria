@@ -18,9 +18,8 @@ for t in toppings:
     print(f"Name: {t}")
     print(f"Date Added: {t.date_added}")
 
-
 '''
-toppings = t.topping_set.all()
+toppings = n.topping_set.all()
 
 for topping in toppings:
     print(topping)
