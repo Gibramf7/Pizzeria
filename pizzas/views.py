@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
-from .models import Pizza
-from .forms import PizzaForm
+from .models import Pizza, Topping
+from .forms import PizzaForm, ToppingForm
 
 # Create your views here.
 
@@ -42,8 +42,51 @@ def new_pizza(request):
             new_pizza = form.save(commit=False)
 
             new_pizza.save()
+        
 
-            return redirect('pizzas:pizza')
+            return redirect('pizzas:pizzas')
 
     context = {'form': form}
     return render(request, 'pizzas/new_pizza.html', context)
+
+
+def new_topping(request, pizza_id):
+    pizza = Pizza.objects.get(id=pizza_id)
+
+    if request.method != 'POST':
+        form = ToppingForm()
+
+    else:
+        form = ToppingForm(data=request.POST)
+
+        if form.is_valid():
+
+            new_topping = form.save(commit=False)
+
+            new_topping.pizza = pizza
+
+            new_topping.save()
+
+            return redirect('pizzas:pizza', pizza_id=pizza_id)
+
+    context = {'form': form, 'pizza': pizza}
+
+    return render(request, 'pizzas/new_topping.html', context)
+
+
+def edit_topping(request, topping_id):
+    topping = Topping.objects.get(id=topping_id)
+    pizza = topping.pizza
+
+    if request.method != 'POST':
+        form = ToppingForm(instance=topping)
+    else:
+        form = ToppingForm(instance=topping, data=request.POST)
+
+    if form.is_valid():
+        form.save()
+        return redirect('pizzas:pizza', pizza_id=pizza.id)
+
+    context = {'topping': topping, 'pizza': pizza, 'form': form}
+
+    return render(request, 'pizzas/edit_topping.html', context)

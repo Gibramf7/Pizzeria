@@ -5,5 +5,34 @@
 <p>Pizza: {{ pizza.name }}</p>
 
 
+<p>
+    Toppings:
+</p>
+
+<ul>
+    {% for topping in toppings %}
+
+    <li>
+        <p>{{ topping.date_added|date:'M d, Y H:i' }}</p>
+        <p>{{ topping.name|linebreaks }}</p>
+
+
+        <p>
+            <a href="{% url 'pizzas:edit_topping' topping.id %}">Edit topping</a>
+        </p>
+        -->
+
+    </li>
+    {% empty %}
+    <li>No toppings for this pizza have been added yet.</li>
+    {% endfor %}
+
+</ul>
+
+
+
+<p>
+    <a href="{% url 'pizzas:new_topping' pizza.id %}">Add a new topping</a>
+</p>
 
 {% endblock content %}
